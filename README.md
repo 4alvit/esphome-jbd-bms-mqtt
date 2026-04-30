@@ -366,3 +366,5 @@ For issues specific to:
 - **JBD BMS communication**: See [esphome-jbd-bms issues](https://github.com/syssi/esphome-jbd-bms/issues)
 - **ESPHome**: See [ESPHome documentation](https://esphome.io/)
 - **This integration**: Open an issue in this repository
+
+**Note:** This is a community project and is not affiliated with Victron Energy.
