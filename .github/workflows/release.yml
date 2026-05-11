@@ -79,7 +79,7 @@ jobs:
           go build -ldflags "$ldflags" -o "dist/${output_name}" .
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: inverter-dashboard-${{ matrix.name }}
           path: dist/inverter-dashboard-${{ matrix.name }}*
