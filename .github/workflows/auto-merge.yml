@@ -1,0 +1,44 @@
+name: Auto-merge PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
+  check_suite:
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    if: |
+      github.actor == '4alvit' &&
+      contains(github.event.pull_request.labels.*.name, 'auto-merge') &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.base.ref == 'main'
+
+    steps:
+      - name: Wait for required checks
+        uses: poseidon/wait-for-status-checks@899c768d191b56eef585c18f8558da19e1f3e707 # v0.6.0
+        id: wait-for-checks
+        with:
+          timeout: 600
+          interval: 10
+          check-names: |
+            CI
+            Python Security Scan
+
+      - name: Auto-merge PR
+        if: steps.wait-for-checks.outputs.status == 'success'
+        uses: pascalgn/automerge-action@7961b8b5eec56cc088c140b56d864285eabd3f6 # v0.16.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_METHOD: squash
+          MERGE_COMMIT_MESSAGE: automatic
+          MERGE_RETRIES: 3
+          MERGE_RETRY_SLEEP: 10000

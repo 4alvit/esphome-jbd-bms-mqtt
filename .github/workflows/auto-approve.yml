@@ -1,0 +1,24 @@
+name: Auto Approve
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  auto-approve:
+    # Only approve PRs from the owner
+    if: github.event.pull_request.user.login == '4alvit'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for GitHub to process synchronization
+        run: sleep 5
+      - name: Approve PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          # Re-approving on every sync ensures the PR remains approved even if 
+          # "Dismiss stale pull request approvals when new commits are pushed" is enabled.
+          gh pr review "$PR_URL" --approve || echo "Failed to approve. Check Organization settings (Actions > General > Workflow permissions)"
