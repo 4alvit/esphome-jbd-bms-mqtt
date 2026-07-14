@@ -578,12 +578,17 @@ sensor:
       if (id(sensor_chain1_bms2_soc).has_state()) socs.push_back(id(sensor_chain1_bms2_soc).state);
       if (id(sensor_chain1_bms3_soc).has_state()) socs.push_back(id(sensor_chain1_bms3_soc).state);
       if (id(sensor_chain1_bms4_soc).has_state()) socs.push_back(id(sensor_chain1_bms4_soc).state);
-      if (socs.size() < 2) return socs.empty() ? NAN : socs[0];
+      if (socs.empty()) return NAN;
       std::sort(socs.begin(), socs.end());
-      if (socs[1] - socs[0] > 20.0f) {
-        return socs[1];
+      float min_v = socs[0];
+      float max_v = socs[socs.size() - 1];
+      float sum = 0;
+      int count = 0;
+      for (float v : socs) {
+        if (max_v - min_v > 20.0f && (std::abs(v - min_v) < 0.5f || std::abs(v - max_v) < 0.5f)) continue;
+        sum += v; count++;
       }
-      return socs[0];
+      return count > 0 ? sum / count : min_v;
 
   - platform: template
     name: "capacity_total_c1"
@@ -659,12 +664,17 @@ sensor:
       if (id(sensor_chain2_bms2_soc).has_state()) socs.push_back(id(sensor_chain2_bms2_soc).state);
       if (id(sensor_chain2_bms3_soc).has_state()) socs.push_back(id(sensor_chain2_bms3_soc).state);
       if (id(sensor_chain2_bms4_soc).has_state()) socs.push_back(id(sensor_chain2_bms4_soc).state);
-      if (socs.size() < 2) return socs.empty() ? NAN : socs[0];
+      if (socs.empty()) return NAN;
       std::sort(socs.begin(), socs.end());
-      if (socs[1] - socs[0] > 20.0f) {
-        return socs[1];
+      float min_v = socs[0];
+      float max_v = socs[socs.size() - 1];
+      float sum = 0;
+      int count = 0;
+      for (float v : socs) {
+        if (max_v - min_v > 20.0f && (std::abs(v - min_v) < 0.5f || std::abs(v - max_v) < 0.5f)) continue;
+        sum += v; count++;
       }
-      return socs[0];
+      return count > 0 ? sum / count : min_v;
 
   - platform: template
     name: "capacity_total_c2"

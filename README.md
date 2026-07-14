@@ -264,6 +264,8 @@ battery/sensor/soc_total/state        # Average SoC
 battery/sensor/capacity_total/state   # Total remaining capacity
 ```
 
+**SOC Calculation Logic**: `soc_total` calculates the average SoC of all batteries while filtering out outliers. If battery SoC values differ by more than 20%, values closest to the min/max are excluded from the average. This handles inaccurate BMS reporting — individual JBD BMS units can drift over time, but averaging across the battery chain produces reliable results.
+
 ## Troubleshooting
 
 ### ESPHome Cannot Connect to GitHub
