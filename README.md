@@ -31,12 +31,14 @@ This project solves the problem of integrating JBD (Jiabaida) BMS-equipped LiFeP
 
 ### Architecture
 
-```
-┌─────────────┐    BLE    ┌─────────────┐    MQTT   ┌─────────────┐
-│   JBD BMS   │◄─────────►│    ESP32    │──────────►│  Venus OS   │
-│  (Battery)  │           │  (ESPHome)  │           │  (Cerbo GX) │
-└─────────────┘           └─────────────┘           └─────────────┘
-       ×4                                            D-Bus Service
+```mermaid
+flowchart LR
+    subgraph Chain["4× JBD BMS (Battery)"]
+        BMS[(BMS 1-4)]
+    end
+    BMS <-.BLE.-> ESP[("ESP32\n(ESPHome)")]
+    ESP --MQTT--> VO[("Venus OS\n(Cerbo GX)")]
+    VO --> DBUS[D-Bus Service]
 ```
 
 ### Why ESP32?
@@ -231,7 +233,7 @@ esphome logs jbd-all-batteries1.yaml --device <ESP32_IP>
 After flashing, access the ESP32 web interface:
 
 - **URL**: `http://jbd-all-batteries.local` or `http://<ESP32_IP>`
-- **Features**: 
+- **Features**:
   - Real-time sensor values
   - WiFi signal strength
   - Restart button
@@ -278,14 +280,14 @@ unable to access 'https://github.com/syssi/esphome-jbd-bms.git/': SSL_ERROR
 ```
 Error: Failed to install Python dependencies into penv
 ```
-**Solution**: 
+**Solution**:
 ```bash
 rm -rf ~/.platformio/penv
 brew install platformio  # Use brew version
 ```
 
 ### ESP32 Not Found via OTA
-**Solution**: 
+**Solution**:
 - Check ESP32 is on same network
 - Use IP address instead of hostname
 - Verify ESP32 has power and WiFi connected
