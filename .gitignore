@@ -1,3 +1,4 @@
 commit.txt
 release.txt
 logs
+__pycache__/
