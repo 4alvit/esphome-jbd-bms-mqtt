@@ -61,9 +61,17 @@ jobs:
 
       - name: Get version from tag
         id: get_version
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "VERSION=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+            TAG="$INPUT_TAG"
+            # Validate tag format
+            if ! [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Error: Invalid tag format" >&2
+              exit 1
+            fi
+            echo "VERSION=$TAG" >> "$GITHUB_OUTPUT"
           else
             echo "VERSION=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
           fi
