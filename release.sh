@@ -6,13 +6,13 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 NOTES_FILE="$SCRIPT_DIR/release.txt"
 
-if [ ! -f "$NOTES_FILE" ]; then
-    echo "Error: $NOTES_FILE not found — create release notes there."
+if [[ ! -f "$NOTES_FILE" ]]; then
+    echo "Error: $NOTES_FILE not found — create release notes there." >&2
     exit 1
 fi
 
-if [ ! -s "$NOTES_FILE" ]; then
-    echo "Error: release.txt is empty"
+if [[ ! -s "$NOTES_FILE" ]]; then
+    echo "Error: release.txt is empty" >&2
     exit 1
 fi
 
@@ -22,7 +22,7 @@ echo ">>> git fetch origin --tags"
 git fetch origin --tags
 
 if ! git diff-index --quiet HEAD --; then
-    echo "Error: uncommitted changes. Commit or stash first."
+    echo "Error: uncommitted changes. Commit or stash first." >&2
     exit 1
 fi
 
