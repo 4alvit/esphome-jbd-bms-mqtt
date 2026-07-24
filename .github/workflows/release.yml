@@ -11,14 +11,12 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: write
-  packages: write
-
 jobs:
   build:
     name: Build binaries
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         include:
@@ -101,6 +99,9 @@ jobs:
     name: Attach binaries to release
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
 
     steps:
       - name: Harden the runner (Audit all outbound calls)
