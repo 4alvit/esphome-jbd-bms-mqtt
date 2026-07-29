@@ -68,11 +68,19 @@ esp32_ble:
   max_connections: 4
 
 esp32_ble_tracker:
+  id: ble_tracker
   scan_parameters:
-    interval: 1200ms
-    window: 600ms
+    interval: 800ms
+    window: 400ms
     active: false
-    continuous: true  # Keep scanning for reconnections
+    continuous: true
+  on_bluetooth_le_advertise:
+    - lambda: |-
+        for (auto &uuid : x.get_service_uuids()) {
+          if (uuid.to_uuid16() == 0xFF00) {
+            ESP_LOGD("ble_scan", "JBD BMS found: %s RSSI: %d", x.address_str().c_str(), x.get_rssi());
+          }
+        }
 
 # All BMS with auto_connect: true (default) - stay connected permanently
 ble_client:
