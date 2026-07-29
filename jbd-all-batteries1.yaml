@@ -74,15 +74,12 @@ esp32_ble_tracker:
     window: 400ms
     active: false
     continuous: true
-  scan_parameters_active:
-    interval: 400ms
-    window: 200ms
-    active: true
-    continuous: false
   on_bluetooth_le_advertise:
     - lambda: |-
-        if (x.get_service_uuid() && x.get_service_uuid().to_uuid16() == 0xFF00) {
-          ESP_LOGD("ble_scan", "JBD BMS found: %s RSSI: %d", x.get_address().to_string().c_str(), x.get_rssi());
+        for (auto &uuid : x.get_service_uuids()) {
+          if (uuid.to_uuid16() == 0xFF00) {
+            ESP_LOGD("ble_scan", "JBD BMS found: %s RSSI: %d", x.address_str().c_str(), x.get_rssi());
+          }
         }
 
 # All BMS with auto_connect: true (default) - stay connected permanently

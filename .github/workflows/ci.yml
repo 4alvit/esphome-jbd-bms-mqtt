@@ -40,6 +40,5 @@ jobs:
         run: |
           for f in jbd-all-batteries*.yaml; do
             echo "Compiling $f..."
-            esphome compile "$f" --no-upload || echo "Compile failed for $f (expected on CI without hardware)"
+            esphome compile "$f" --no-upload
           done
-        continue-on-error: true
