@@ -67,11 +67,22 @@ esp32_ble:
   max_connections: 4
 
 esp32_ble_tracker:
+  id: ble_tracker
   scan_parameters:
-    interval: 1200ms
-    window: 600ms
+    interval: 800ms
+    window: 400ms
     active: false
     continuous: true
+  scan_parameters_active:
+    interval: 400ms
+    window: 200ms
+    active: true
+    continuous: false
+  on_bluetooth_le_advertise:
+    - lambda: |-
+        if (x.get_service_uuid() && x.get_service_uuid().to_uuid16() == 0xFF00) {
+          ESP_LOGD("ble_scan", "JBD BMS found: %s RSSI: %d", x.get_address().to_string().c_str(), x.get_rssi());
+        }
 
 # Chain 2 BMS - MAC addresses for batteries 5-8
 ble_client:

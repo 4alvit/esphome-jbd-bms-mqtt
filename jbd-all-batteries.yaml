@@ -69,10 +69,20 @@ esp32_ble:
 esp32_ble_tracker:
   id: ble_tracker
   scan_parameters:
-    interval: 1200ms
-    window: 600ms
+    interval: 800ms
+    window: 400ms
     active: false
+    continuous: true
+  scan_parameters_active:
+    interval: 400ms
+    window: 200ms
+    active: true
     continuous: false
+  on_bluetooth_le_advertise:
+    - lambda: |-
+        if (x.get_service_uuid() && x.get_service_uuid().to_uuid16() == 0xFF00) {
+          ESP_LOGD("ble_scan", "JBD BMS found: %s RSSI: %d", x.get_address().to_string().c_str(), x.get_rssi());
+        }
 
 # All 8 BMS with auto_connect: false
 ble_client:
@@ -759,20 +769,30 @@ globals:
     type: int
     restore_value: no
     initial_value: '-1'
+  - id: ble_busy
+    type: bool
+    restore_value: no
+    initial_value: 'false'
 
 # Clean interval - uses ble_client.connect action
 interval:
-  - interval: 20s
+  - interval: 30s
     then:
       - esp32_ble_tracker.stop_scan:
           id: ble_tracker
       - lambda: |-
+          if (id(ble_busy)) {
+            ESP_LOGW("cycle", "BLE busy, skipping this cycle");
+            id(ble_busy) = false;
+            return;
+          }
+          id(ble_busy) = true;
           id(current_bms_index) = (id(current_bms_index) + 1) % 8;
           ESP_LOGI("cycle", ">>> Requesting BMS %d <<<", id(current_bms_index) + 1);
-      - delay: 500ms
+      - delay: 1s
       - esp32_ble_tracker.start_scan:
           id: ble_tracker
-      - delay: 500ms
+      - delay: 1s
       # Chain 1
       - if:
           condition:
@@ -815,3 +835,6 @@ interval:
             lambda: 'return id(current_bms_index) == 7;'
           then:
             - ble_client.connect: ble_chain2_bms4
+      - delay: 15s
+      - lambda: |-
+          id(ble_busy) = false;

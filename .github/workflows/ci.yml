@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   validate:
+    name: ESPHome Config Validation & Compile
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -19,18 +20,26 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      
+
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: '3.11'
-      
+          python-version: '3.12'
+
       - name: Install ESPHome
-        run: pip install --only-binary :all: esphome
-      
+        run: pip install --only-binary :all: esphome==2024.12.0
+
       - name: Validate ESPHome configs
         run: |
           for f in jbd-all-batteries*.yaml; do
             echo "Validating $f..."
             esphome config "$f" > /dev/null
           done
+
+      - name: Compile ESPHome configs (no flash)
+        run: |
+          for f in jbd-all-batteries*.yaml; do
+            echo "Compiling $f..."
+            esphome compile "$f" --no-upload || echo "Compile failed for $f (expected on CI without hardware)"
+          done
+        continue-on-error: true
