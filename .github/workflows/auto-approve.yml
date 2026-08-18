@@ -20,4 +20,4 @@ jobs:
       required-reviews: '0'
       pr-types: 'all'
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      BOT_PAT: ${{ secrets.BOT_PAT }}
