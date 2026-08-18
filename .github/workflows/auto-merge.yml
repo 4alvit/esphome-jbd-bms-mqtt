@@ -34,6 +34,7 @@ jobs:
         with:
           timeout: 600
           interval: 10
+          token: ${{ secrets.BOT_PAT }}
           check-names: |
             CI
             Python Security Scan
@@ -42,7 +43,7 @@ jobs:
         if: steps.wait-for-checks.outputs.status == 'success'
         uses: pascalgn/automerge-action@7961b8b5eec56cc088c140b56d864285eabd3f67 # v0.16.4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BOT_PAT: ${{ secrets.BOT_PAT }}
           MERGE_METHOD: squash
           MERGE_COMMIT_MESSAGE: automatic
           MERGE_RETRIES: 3
