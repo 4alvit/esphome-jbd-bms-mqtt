@@ -12,6 +12,4 @@ permissions:
 jobs:
   auto-approve:
     name: Auto Approve
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/auto-approve-reusable.yml@c0eecd420019a4c631314029130d51c707b9d3a9
-    with:
-      pr-author: 'dependabot[bot],renovate[bot],4alvit'
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/auto-approve-reusable.yml@3e0d2597faa73c73c32a62d120478c925fe18edb
