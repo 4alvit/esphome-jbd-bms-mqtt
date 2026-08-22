@@ -12,7 +12,7 @@ permissions:
 jobs:
   auto-approve:
     name: Auto Approve
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/auto-approve-reusable.yml@f27c012d5ab60f728d131a69d24819bba0b8963a
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/auto-approve-reusable.yml@5b18667880c7a0154b7c7e6686042eff5f47cdb7
     # BOT_PAT must be forwarded explicitly (reusable workflows receive
     # no secrets by default). Without the secret the step skips cleanly.
     secrets:
