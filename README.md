@@ -6,8 +6,6 @@
 [![Downloads](https://img.shields.io/github/downloads/victron-venus/esphome-jbd-bms-mqtt/total)](https://github.com/victron-venus/esphome-jbd-bms-mqtt/releases)
 [![ESPHome](https://img.shields.io/badge/ESPHome-2024.x-blue.svg)](https://esphome.io/)
 [![ESP32](https://img.shields.io/badge/ESP32-supported-green.svg)](https://www.espressif.com/en/products/socs/esp32)
-[![GitHub stars](https://img.shields.io/github/stars/victron-venus/esphome-jbd-bms-mqtt)](https://github.com/victron-venus/esphome-jbd-bms-mqtt/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/victron-venus/esphome-jbd-bms-mqtt)](https://github.com/victron-venus/esphome-jbd-bms-mqtt/network/members)
 [![GitHub watchers](https://img.shields.io/github/watchers/victron-venus/esphome-jbd-bms-mqtt)](https://github.com/victron-venus/esphome-jbd-bms-mqtt/watchers)
 [![GitHub contributors](https://img.shields.io/github/contributors/victron-venus/esphome-jbd-bms-mqtt)](https://github.com/victron-venus/esphome-jbd-bms-mqtt/graphs/contributors)
 [![GitHub issues](https://img.shields.io/github/issues/victron-venus/esphome-jbd-bms-mqtt)](https://github.com/victron-venus/esphome-jbd-bms-mqtt/issues)
