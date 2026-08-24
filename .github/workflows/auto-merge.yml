@@ -30,17 +30,15 @@ jobs:
 
       - name: Wait for required checks
         uses: poseidon/wait-for-status-checks@899c768d191b56eef585c18f8558da19e1f3e707 # v0.6.0
-        id: wait-for-checks
         with:
           timeout: 600
           interval: 10
           token: ${{ secrets.BOT_PAT }}
-          check-names: |
-            CI
-            Python Security Scan
 
       - name: Auto-merge PR
-        if: steps.wait-for-checks.outputs.status == 'success'
+        # wait-for-status-checks declares no outputs; automerge-action itself
+        # blocks until required checks pass and required reviews are present,
+        # retrying MERGE_RETRIES times.
         uses: pascalgn/automerge-action@7961b8b5eec56cc088c140b56d864285eabd3f67 # v0.16.4
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
