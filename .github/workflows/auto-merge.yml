@@ -3,8 +3,9 @@ name: Auto-merge PR
 on:
   pull_request:
     types: [opened, synchronize, labeled, unlabeled]
-  check_suite:
-    types: [completed]
+  # check_suite trigger removed: the job if reads github.event.pull_request.*,
+  # which is null on check_suite events, so those runs always skipped anyway.
+  # wait-for-status-checks inside pull_request runs covers waiting for checks.
 
 permissions:
   contents: write
@@ -18,22 +19,24 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       github.actor == '4alvit' &&
-      contains(github.event.pull_request.labels.*.name, 'auto-merge') &&
       github.event.pull_request.draft == false &&
       github.event.pull_request.base.ref == 'main'
 
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
         with:
           egress-policy: audit
 
       - name: Wait for required checks
-        uses: poseidon/wait-for-status-checks@899c768d191b56eef585c18f8558da19e1f3e707 # v0.6.0
+        uses: poseidon/wait-for-status-checks@e7e24423722c5b8e97a6dd5848827d2a412f812d # v0.7.0
         with:
+          token: ${{ secrets.BOT_PAT }}
           timeout: 600
           interval: 10
-          token: ${{ secrets.BOT_PAT }}
+          match_pattern: |
+            Python Security Scan
+            Dependency Review
 
       - name: Auto-merge PR
         # wait-for-status-checks declares no outputs; automerge-action itself
@@ -42,7 +45,11 @@ jobs:
         uses: pascalgn/automerge-action@7961b8b5eec56cc088c140b56d864285eabd3f67 # v0.16.4
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_PAT }}
+          # automerge-action's default label list is "automerge,@automerge" —
+          # it never matched this repo's "auto-merge" label, so nothing ever
+          # merged. Point it at the repo label.
+          MERGE_LABELS: auto-merge
           MERGE_METHOD: squash
           MERGE_COMMIT_MESSAGE: automatic
-          MERGE_RETRIES: 3
-          MERGE_RETRY_SLEEP: 10000
+          MERGE_RETRIES: 60
+          MERGE_RETRY_SLEEP: 30000
