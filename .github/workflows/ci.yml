@@ -3,8 +3,20 @@ name: CI
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '**.json'
+      - '**.yaml'
+      - '**.yml'
   pull_request:
     branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '**.json'
+      - '**.yaml'
+      - '**.yml'
 
 permissions:
   contents: read
